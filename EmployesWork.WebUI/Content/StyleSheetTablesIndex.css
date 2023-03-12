@@ -1,0 +1,244 @@
+﻿
+
+
+.inner_table_employe_info_for_month {
+    border:none;
+    margin:-2px auto -2px auto;   
+    background-color:white;   
+}
+
+
+.inner_table_employe_info_for_month th{
+    border-top:none;
+    border-bottom:none; 
+    background-color:white;   
+}
+
+
+.inner_table_employe_info_for_month th:first-child{
+    border-left:none;
+}
+.inner_table_employe_info_for_month tr th:last-child{
+    border-right:none;
+}
+.inner_table_employe_info_for_month td{
+    border-bottom:none;
+     border-top:none;
+    height:30px;
+     background-color:white;  
+}
+.inner_table_employe_info_for_month tr{
+    border-bottom:1px dotted black;
+    background-color:white; 
+}
+.inner_table_employe_info_for_month tr:last-child{
+    border-bottom:none;
+}
+
+.inner_table_employe_info_for_month tr td:last-child{
+    border-right:none;
+}
+.inner_table_employe_info_for_month tr td:first-child{
+    border-left:none;
+}
+.inner_table_employe_info_for_month_colsInn {
+    padding:0;
+}
+
+.itogsOfMonthWrapperHours_table tr:nth-child(even) {
+    background-color:#f5f5f5;
+}
+
+
+.itogsOfMonthWrapperHours_table th{
+    min-width:100px;
+   
+}
+.itogsOfMonthWrapperHours_table td{
+    min-width:101px;
+}
+
+
+.itogsOfMonthWrapperHours_table .name_of_Employe,
+.name_of_Employe {
+   
+    text-align:left;
+    padding:5px;
+    font-weight:bold;
+    line-height:0.7em;
+    min-width:145px;
+}
+
+
+.employe_is_ingenier a,
+.employe_is_ingenier {
+    color: #9d0c0c;
+}
+
+.description_of_Employe {
+    color: #666;
+    font-weight:normal;
+    font-size:0.6em;   
+}
+
+.employer_id {
+    min-width:70px;
+    text-align:left;
+}
+
+.employe_is_worked {
+    color:#000;
+    font-weight:bold;
+ 
+     background-color:#64d5c2; 
+     border-radius:5px;
+          
+}
+
+
+
+.employe_is_no_worked a,
+.employe_is_no_worked {
+    border-radius:15px;
+    color:#fff;
+    background-color:#9d0c0c; 
+}
+.empty a,
+.employe_is_no_worked a,
+.employe_is_worked a {
+
+ display:block;
+ padding-top:7px;
+ height:25px;
+}
+
+
+.employe_brig {
+    min-width:60px;
+}
+
+.itogs_result_last {
+    min-width:140px;
+}
+
+.day_of_rest {
+    background-color:#9d0c0c;
+    color:white;
+}
+
+.day_of_rest a{
+    
+    background-color:#9d0c0c;
+    color:white;
+}
+.itogs_description,
+.itogs_description_details {
+    min-width:110px;
+    border-top:2px solid black;
+}
+.itogs_of_day_head {
+    min-width:260px;
+   
+    border-top:2px solid black !important;
+}
+.itogs_of_day_head_clear {
+  
+    border-top:1px solid black !important;
+}
+
+.itogs_of_day_head_area_igenier td:nth-child(n+2),
+.itogs_of_day_head_area_no_igenier td:nth-child(n+2),
+.itogs_of_day_head_area td:nth-child(n+2){
+    border-top:1px dotted black;
+     border-bottom:1px dotted black;    
+}
+.itogs_result {
+    font-weight:bold;
+    border-top:2px solid black;
+}
+.itogs_of_day_head_area,
+.itogs_of_day_head_area td,
+.itogs_of_day_head_area_no_igenier,
+.itogs_of_day_head_area_igenier,
+.itogs_of_day_head_area_no_igenier td,
+.itogs_of_day_head_area_igenier td {
+    border-top:1px dotted black;
+    border-bottom:none;
+      
+}
+.itogs_result {
+    font-weight:bold;
+    border-bottom:1px dotted black;
+    border-top:2px solid black !important;
+    
+}
+
+.itogs_of_day_head_area .day_of_rest, .itogs_of_day_head_area .day_of_work{
+   border-top:2px solid black;
+}
+
+.itogs_of_day_head_area {
+    background-color:#eef;
+}
+.itogs_of_day_head_area_igenier {
+    background-color:#fee;
+}
+.itogs_of_day_head_area_no_igenier {
+    background-color:#efe;
+}
+
+.main_table_in_main_tables_block  tr:nth-child(even){
+    /*background-color:#f5f5f5;*/
+
+}
+.main_table_in_main_tables_block{
+   border-collapse:separate;
+
+}
+
+.table_of_no_exists td {
+    min-width:50px;
+}
+
+
+.main_table_in_main_tables_block .icon {
+    display:inline-block;
+    width:35px;
+    height:35px;
+    /*border:1px dotted gray;*/
+    margin-left:5px;
+    vertical-align:middle;
+}
+
+.main_table_in_main_tables_block .icon:hover {
+    outline:1px dotted gray;
+}
+
+
+
+.main_table_in_main_tables_block .icon_fill {
+    background: url('../Images/icons/fill_bw.png') no-repeat 50% 50%;  
+}
+
+
+.main_table_in_main_tables_block .icon_dell {   
+    background:url('../Images/icons/del_bw.png') no-repeat 50% 50%;  
+}
+
+.main_table_in_main_tables_block .icon_fill:hover {   
+    background:white url('../Images/icons/fill_clr.png') no-repeat 50% 50%;
+   
+}
+
+
+.main_table_in_main_tables_block .icon_dell:hover {   
+    background:white url('../Images/icons/del_clr.png') no-repeat 50% 50%;
+}
+
+.main_table_in_main_tables_block .icon_excel {
+    background:white  url('../Images/icons/excel-bw.png') no-repeat 50% 50%;  
+}
+.main_table_in_main_tables_block .icon_excel:hover {   
+    background:white url('../Images/icons/excel-clr.png') no-repeat 50% 50%;
+   
+}

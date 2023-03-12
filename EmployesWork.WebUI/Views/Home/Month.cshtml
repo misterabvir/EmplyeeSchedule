@@ -1,0 +1,40 @@
+﻿@model EmployesWork.WebUI.Models.ModelBox
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<!-- #region Ссылки в заголовке -->
+<h2 class="default_header_2">
+    @{
+        DateTime dtnext = ViewBag.Date;
+        dtnext = dtnext.AddMonths(1);
+        DateTime dtprev = ViewBag.Date;
+        dtprev = dtprev.AddMonths(-1);
+    }
+    <a href="/home/Month/@dtprev.Year/@dtprev.Month">&larr;</a>
+    @ViewBag.Title
+    <a href="/home/Month/@dtnext.Year/@dtnext.Month">&rarr;</a>
+
+</h2>
+
+<!-- #endregion -->
+
+
+
+<div class="WrapperAllTable" id="content">
+
+
+        @Html.Action("Tables", new { year = ViewBag.Date.Year, month = ViewBag.Date.Month })
+</div>
+
+
+
+
+
+
+
+
+

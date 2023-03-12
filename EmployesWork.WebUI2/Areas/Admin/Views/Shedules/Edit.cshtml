@@ -1,0 +1,36 @@
+﻿@model EmployesWork.WebUI2.Shedules
+
+@{
+    ViewBag.Title = "Редактирование графика";
+}
+
+
+
+    <div class="form-horizontal" id="editshwrap">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id, new {id = "Idd" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Brig,"Бригада", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Brig, new { htmlAttributes = new { @class = "form-control", id = "Brig" } })
+                @Html.ValidationMessageFor(model => model.Brig, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sheduler,"График", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Sheduler, new { htmlAttributes = new { @class = "form-control", id = "Sheduler" } })
+                @Html.ValidationMessageFor(model => model.Sheduler, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a href="javascript:close()"><input type="button" value="Сохранить" onclick="editp()"  /><input type="button" value="Закрыть" /></a>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище UAM_TABLE_DBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonnelId" Type="int" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="ING" Type="bit" />
+          <Property Name="ShedulesId" Type="int" />
+          <Property Name="Show" Type="bit" />
+        </EntityType>
+        <EntityType Name="Shedules">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Brig" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sheduler" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkDays">
+          <Key>
+            <PropertyRef Name="DayId" />
+          </Key>
+          <Property Name="DayId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Literal" Type="nvarchar" MaxLength="5" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="EmployeId" Type="int" Nullable="false" />
+          <Property Name="ShedulesId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Employes_Shedules">
+          <End Role="Shedules" Type="Self.Shedules" Multiplicity="0..1" />
+          <End Role="Employes" Type="Self.Employes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shedules">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employes">
+              <PropertyRef Name="ShedulesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkDays_Employes">
+          <End Role="Employes" Type="Self.Employes" Multiplicity="1" />
+          <End Role="WorkDays" Type="Self.WorkDays" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkDays">
+              <PropertyRef Name="EmployeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkDays_Shedules">
+          <End Role="Shedules" Type="Self.Shedules" Multiplicity="1" />
+          <End Role="WorkDays" Type="Self.WorkDays" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shedules">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkDays">
+              <PropertyRef Name="ShedulesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище UAM_TABLE_DBModelContainer">
+          <EntitySet Name="Employes" EntityType="Self.Employes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shedules" EntityType="Self.Shedules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkDays" EntityType="Self.WorkDays" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Employes_Shedules" Association="Self.FK_Employes_Shedules">
+            <End Role="Shedules" EntitySet="Shedules" />
+            <End Role="Employes" EntitySet="Employes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkDays_Employes" Association="Self.FK_WorkDays_Employes">
+            <End Role="Employes" EntitySet="Employes" />
+            <End Role="WorkDays" EntitySet="WorkDays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkDays_Shedules" Association="Self.FK_WorkDays_Shedules">
+            <End Role="Shedules" EntitySet="Shedules" />
+            <End Role="WorkDays" EntitySet="WorkDays" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="UAM_TABLE_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonnelId" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ING" Type="Boolean" />
+          <Property Name="ShedulesId" Type="Int32" />
+          <Property Name="Show" Type="Boolean" />
+          <NavigationProperty Name="Shedule" Relationship="Self.FK_Employes_Shedules" FromRole="Employes" ToRole="Shedules" />
+          <NavigationProperty Name="WorkDays" Relationship="Self.FK_WorkDays_Employes" FromRole="Employes" ToRole="WorkDays" />
+        </EntityType>
+        <EntityType Name="Shedule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Brig" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Sheduler" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Employes" Relationship="Self.FK_Employes_Shedules" FromRole="Shedules" ToRole="Employes" />
+          <NavigationProperty Name="WorkDays" Relationship="Self.FK_WorkDays_Shedules" FromRole="Shedules" ToRole="WorkDays" />
+        </EntityType>
+        <EntityType Name="WorkDay">
+          <Key>
+            <PropertyRef Name="DayId" />
+          </Key>
+          <Property Name="DayId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Literal" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EmployeId" Type="Int32" Nullable="false" />
+          <Property Name="ShedulesId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Employe" Relationship="Self.FK_WorkDays_Employes" FromRole="WorkDays" ToRole="Employes" />
+          <NavigationProperty Name="Shedule" Relationship="Self.FK_WorkDays_Shedules" FromRole="WorkDays" ToRole="Shedules" />
+        </EntityType>
+        <Association Name="FK_Employes_Shedules">
+          <End Role="Shedules" Type="Self.Shedule" Multiplicity="0..1" />
+          <End Role="Employes" Type="Self.Employe" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shedules">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employes">
+              <PropertyRef Name="ShedulesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkDays_Employes">
+          <End Role="Employes" Type="Self.Employe" Multiplicity="1" />
+          <End Role="WorkDays" Type="Self.WorkDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkDays">
+              <PropertyRef Name="EmployeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkDays_Shedules">
+          <End Role="Shedules" Type="Self.Shedule" Multiplicity="1" />
+          <End Role="WorkDays" Type="Self.WorkDay" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shedules">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="WorkDays">
+              <PropertyRef Name="ShedulesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="UAM_TABLE_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employes" EntityType="Self.Employe" />
+          <EntitySet Name="Shedules" EntityType="Self.Shedule" />
+          <EntitySet Name="WorkDays" EntityType="Self.WorkDay" />
+          <AssociationSet Name="FK_Employes_Shedules" Association="Self.FK_Employes_Shedules">
+            <End Role="Shedules" EntitySet="Shedules" />
+            <End Role="Employes" EntitySet="Employes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkDays_Employes" Association="Self.FK_WorkDays_Employes">
+            <End Role="Employes" EntitySet="Employes" />
+            <End Role="WorkDays" EntitySet="WorkDays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkDays_Shedules" Association="Self.FK_WorkDays_Shedules">
+            <End Role="Shedules" EntitySet="Shedules" />
+            <End Role="WorkDays" EntitySet="WorkDays" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище UAM_TABLE_DBModelContainer" CdmEntityContainer="UAM_TABLE_DBEntities">
+          <EntitySetMapping Name="Employes">
+            <EntityTypeMapping TypeName="UAM_TABLE_DBModel.Employe">
+              <MappingFragment StoreEntitySet="Employes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PersonnelId" ColumnName="PersonnelId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ING" ColumnName="ING" />
+                <ScalarProperty Name="ShedulesId" ColumnName="ShedulesId" />
+                <ScalarProperty Name="Show" ColumnName="Show" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shedules">
+            <EntityTypeMapping TypeName="UAM_TABLE_DBModel.Shedule">
+              <MappingFragment StoreEntitySet="Shedules">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Brig" ColumnName="Brig" />
+                <ScalarProperty Name="Sheduler" ColumnName="Sheduler" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkDays">
+            <EntityTypeMapping TypeName="UAM_TABLE_DBModel.WorkDay">
+              <MappingFragment StoreEntitySet="WorkDays">
+                <ScalarProperty Name="DayId" ColumnName="DayId" />
+                <ScalarProperty Name="Literal" ColumnName="Literal" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="EmployeId" ColumnName="EmployeId" />
+                <ScalarProperty Name="ShedulesId" ColumnName="ShedulesId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

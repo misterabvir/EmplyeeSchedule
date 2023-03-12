@@ -1,0 +1,23 @@
+﻿#wrap a {
+    display:inline-block;
+    margin:10px;
+    padding:20px;
+    width: 160px;
+    background-color: #ccc;
+    color:#333;
+    text-decoration:none;
+    font-family: Verdana;
+    font-weight:bold;
+}
+
+#wrap a:hover {
+    border-bottom: 5px solid #00ff90; 
+    padding-bottom:15px;
+}
+
+#wrap {
+   
+    width:220px;
+    margin: 20px auto;
+    text-align: center;  
+}

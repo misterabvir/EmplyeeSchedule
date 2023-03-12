@@ -1,0 +1,45 @@
+﻿@model IEnumerable<EmployesWork.WebUI2.Employes>
+
+@{
+    ViewBag.Title = "Профили работников";
+}
+
+
+
+<table class="table" id="emTable">
+    <caption><a href="javascript:create()">Добавить</a></caption>
+    <tr>
+        <th>
+            Таб.№
+        </th>
+        <th>
+            ФИО
+        </th>
+        <th>
+            Должность
+        </th>
+
+        <th colspan="3">Действия</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonnelId)
+            </td>
+            <td class="@(item.ING.GetValueOrDefault()?"ing":"")">
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href="javascript:edit('@item.Id')">Редактировать</a> |
+                <a href="javascript:details('@item.Id')">Детали</a> |
+                <a href="javascript:deleteE('@item.Id')">Удалить</a>
+            </td>
+        </tr>
+    }
+
+</table>

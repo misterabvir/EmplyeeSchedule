@@ -1,0 +1,69 @@
+﻿@model EmployesWork.Domain.Employe
+
+@{
+    ViewBag.Title = "Изменить";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2  class="default_header_2">Выход @ViewBag.Date.ToShortDateString()</h2>
+<div class="wrap_fill_change_day_concrete">
+    @using (Html.BeginForm("FillChangeDayConcrete", "Admin", FormMethod.Post))
+    {
+
+
+    <div class="form-horizontal">
+        <div>
+            <h4>@Model.Name</h4>
+
+            
+
+            @{var v = Model.WorkDays.Where(w => w.Date == ViewBag.Date).FirstOrDefault();}
+
+            @if (v != null)
+            {
+                <input type="text" value="@v.Literal" name="Literal" />
+                <input type="hidden" value="@v.DayId" name="DayId" />
+            }
+            else
+            {
+                <input type="text" value="" name="Literal" list="cocktail" autocomplete="off" />
+                <input type="hidden" value="" name="DayId" />
+
+                <datalist id="cocktail">
+                    @foreach (var shed in Model.WorkDays.Select(w => w.Literal).Distinct().ToArray())
+                    {
+                        <option>@shed</option>
+                    }
+                </datalist>
+            }
+
+
+            <input type="hidden" value="@Model.Id" name="EmployeId" />
+            <input type="hidden" value="@ViewBag.Date" name="Date" />
+
+
+
+            <select name="Shedule">
+                @foreach (var shd in ViewBag.Box.Shedules)
+                {
+                    if (shd.Id == 6) { continue; }
+
+                    if (Model.ShedulesId == shd.Id)
+                    {
+                        <option value="@shd.Id" selected>@shd.Brig Гр.@shd.Sheduler</option>
+                    }
+                    else
+                    {
+                        <option value="@shd.Id">@shd.Brig Гр.@shd.Sheduler</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <p class="subm"><input type="submit" value="Сохранить изменения" /></p>
+        <p class="subm"><a href="../../../../FillMonth/@ViewBag.Date.Year/@ViewBag.Date.Month">Назад</a></p>
+    </div>
+
+    }
+</div>
+

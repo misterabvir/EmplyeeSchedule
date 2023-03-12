@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @RenderSection(name:  "scripts", required: false)
+    @RenderSection(name: "styles", required: false)
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <a href="~/home">
+            <img class="wheel" src="~/Images/logos.png" />
+            <img src="~/Images/logo.png" />
+        </a>
+    </header>
+
+    <h1>@ViewBag.Title</h1>
+
+
+    <section>
+        @RenderBody()
+    </section>
+
+    
+</body>
+</html>

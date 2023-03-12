@@ -1,0 +1,43 @@
+﻿@{
+    DateTime date = ViewBag.Date != null? ViewBag.Date: DateTime.Now;
+    Employes employe = ViewBag.Employe;
+    WorkDays workday = ViewBag.WorkDays!= null? ViewBag.WorkDays: new WorkDays();
+    IEnumerable<Shedules> sheds = ViewBag.Shedules;
+   
+    var options = new AjaxOptions()
+    {
+
+        Url = Url.Action("DayConcreteEmResult"),
+
+    };
+
+}
+<div id="wrapdata">
+    @using (Ajax.BeginForm(options))
+    {
+        <p>
+            Выход: <span id="nameEm">@employe.Name</span><br /> Дата: <span id="datewd">@date.ToLongDateString()</span>
+        </p>
+        <input type="hidden" name="day.EmployeId" value="@employe.Id" />
+        <input type="hidden" name="day.DayId" value="@(workday == null ? 0 : workday.DayId)" />
+            <input type="hidden" name="day.Date" value="@date" />
+            <div>
+                <input type="text" name="day.Literal" value="@(workday == null ? "" : workday.Literal)" />
+                @{
+                    var sel = workday==null || workday.DayId == 0 ? employe.ShedulesId : workday.ShedulesId == 6 ? employe.ShedulesId : workday.ShedulesId;
+                }
+                <select name="day.ShedulesId">
+                    @foreach (var sh in sheds)
+                    {
+                        <option value="@sh.Id" @(sel == sh.Id ? "selected='selected'" : "")> @sh.Brig @sh.Sheduler</option>
+                    }
+                </select>
+
+            </div>
+
+            <div id="buttons" onclick="javascript:closeDiv1()">
+                <input id="send1" type="submit" value="OK" />
+                <input type="button" value="Cancel" onclick="javascript:closeDiv1()" />
+            </div>
+                    }
+</div>

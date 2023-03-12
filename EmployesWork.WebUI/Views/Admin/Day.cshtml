@@ -1,0 +1,103 @@
+﻿@model EmployesWork.WebUI.Models.ModelBox
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="default_header_2">Изменить выхода за @ViewBag.Date.ToShortDateString()</h2>
+<div class="wrapperTable table_for_day_changer">
+@using (Html.BeginForm("Day", "Admin", FormMethod.Post))
+{
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2">Бр.</th>
+                <th rowspan="2">Гр.</th>
+                <th rowspan="2">Таб.№</th>
+                <th rowspan="2">ФИО</th>
+                <th colspan="3">@ViewBag.Title</th>
+            </tr>
+        <tr>
+            <th>Лит.</th>
+            <th>График</th>
+        </tr>
+    </thead>
+        <tbody>
+          @foreach (var item in Model.Employes)
+          {
+                <tr>
+                    <td class="employe_brig">@item.Shedule.Brig</td>
+                    <td class="employe_brig">Гр.@item.Shedule.Sheduler</td>
+                    @if (item.ING.GetValueOrDefault())
+                    {
+
+                        <td class="employe_is_ingenier employer_id">@item.PersonnelId</td>
+                        <td class="employe_is_ingenier name_of_Employe">@item.Name<br /><span class="description_of_Employe">@item.Description</span></td>
+                    }
+                    else
+                    {
+                        <td class="employer_id">@item.PersonnelId</td>
+                        <td class="name_of_Employe">@item.Name<br /><span class="description_of_Employe">@item.Description</span></td>
+                    }
+                                                                
+                    <td>
+                        @{var v = @Model.Days.Where(d => d.Date.ToShortDateString() == ViewBag.Date.ToShortDateString() && d.EmployeId == item.Id).FirstOrDefault();}
+
+                        @if (v != null)
+                        {
+                            <input type = "text" value = "@v.Literal" name = "Literal" />
+                            <input type="hidden" value="@v.DayId" name="DayId" />
+                        }
+                        else
+                        {
+                            <input type="text" value="" name="Literal" list="sheduleslist" autocomplete="off"/>
+                            <input type="hidden" value="" name="DayId" />
+
+                            <datalist id="sheduleslist">
+                                @foreach (var shed in Model.Days.Select(w => w.Literal).Distinct().ToArray())
+                                {
+                                    <option>@shed</option>
+                                }
+
+                            </datalist>
+                        }
+
+                        <input type="hidden" value="@item.Id" name="EmployeId" />
+                        <input type="hidden" value="@ViewBag.Date" name="Date" />
+
+                                                      
+                    </td> 
+                    <td>
+                        <select name="Shedule">
+                            @{
+                                v = Model.Days.Where(d => d.Date.ToShortDateString() == ViewBag.Date.ToShortDateString() && d.EmployeId == item.Id).FirstOrDefault();
+                            }
+                            @foreach (var shd in Model.Shedules)
+                            {
+                                if (shd.Id == 6) { continue; }
+
+                                if (v != null && v.ShedulesId!=6 && shd.Id == v.ShedulesId)
+                                {
+                                    <option value="@v.Shedule.Id" selected>@shd.Brig Гр.@shd.Sheduler</option>
+                                }
+                                else if (item.ShedulesId == shd.Id && (v == null || v.ShedulesId == 6))
+                                {
+                                    <option value="@shd.Id" selected>@shd.Brig Гр.@shd.Sheduler</option>
+                                }
+                                else
+                                {
+                                    <option value="@shd.Id">@shd.Brig Гр.@shd.Sheduler</option>
+                                }
+                            }
+                        </select>
+                    </td>                                       
+                </tr>
+            }                      
+        </tbody>
+    </table>
+    <p class="subm"><input type="submit" value="Сохранить изменения" /></p>
+    <p class="subm"><a href="../../../FillMonth/@ViewBag.Date.Year/@ViewBag.Date.Month">Назад</a></p>
+   }
+
+</div>
+

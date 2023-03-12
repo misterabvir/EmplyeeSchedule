@@ -1,0 +1,37 @@
+﻿@model EmployesWork.WebUI2.Shedules
+
+@{
+    ViewBag.Title = "Удаление графика";
+}
+
+<h3>Вы действительно хотите удалить этот график?</h3>
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            Бригада
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Brig)
+        </dd>
+
+        <dt>
+            График
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sheduler)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-default" /> |
+          
+        </div>
+    }
+</div>

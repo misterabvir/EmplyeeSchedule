@@ -1,0 +1,207 @@
+﻿@model IEnumerable<EmployesWork.WebUI2.WorkDays>
+
+@{
+    
+    ViewBag.Title = "Табель выходов";
+
+    
+}
+
+
+
+<div id="monthdates">
+
+</div>
+
+
+<div id="wrapperTable" style="display:none;">
+    <div id="buttonFill">
+        <a href="javascript:fill();">Заполнить</a> 
+        <a   href="javascript:clear();" >Очистить</a> 
+        <a href="javascript:excel();" id="test">Excel</a> 
+        <a ><label>Полный табель<input type="checkbox" id="allcheck" onchange="RefreshTable()" /></label> </a>
+    </div>
+
+    <div id="innerwr">
+        <table class="table" id="tabledata">
+
+        </table>
+    </div>
+</div>
+<div id="dayyy"></div>
+<div id="dataaa" style="display:none"></div>
+<div id="mothesLiteralsEx"  style="display:none;"></div>
+<div id="wraploading" ><div id="loadder"><img src="~/Images/Loading.gif" />Подождите идет обработка данных...</div></div>
+<div id="settings">
+    
+</div>
+<div id="excelwaitwrap">
+    <img src='~/Images/Loading.gif' style="display:none" id="excelwait"/>
+    <div id="excelwrap">
+
+    </div>
+</div>
+
+<script>
+    var date = '@ViewBag.Date';
+
+    function excel() {
+       
+        $("#excelwrap").html('');
+        $("#excelwait").show();
+        $.ajax({
+            url: "@Url.Action("ExcelCreatorStart")",
+            type: "POST",
+        data: {
+            date: date,
+            all: $("#allcheck").prop('checked'),
+            },
+        success: function (response) {
+            $("#excelwait").hide();
+            $("#excelwrap").html(response);
+        }
+    });
+    };
+
+
+
+    function monthesExist(id)
+    {
+
+        $('#mothesLiteralsEx').slideDown(500);
+        $.ajax({
+            url: "@Url.Action("MonthExists")",
+            type: "POST",
+            data: {
+                date: date,
+                id: id
+            },
+            success: function (response) {
+            $("#mothesLiteralsEx").html(response);
+        }});
+    }
+
+    function fill() {
+        date;
+        $('#wraploading').slideDown(0);
+        $.ajax({
+            url: "@Url.Action("FillMonth")",
+            type: "POST",
+            data: "date=" + date,
+            success: function () {
+                RefreshTable();
+        }});};
+
+
+    function clear() {
+        date;
+        var answer = confirm("Вы пытаетесь стереть все данные за этот месяц. Продолжить?")
+        if (answer) {
+            $('#wraploading').slideDown(0);
+            $.ajax({
+                url: "@Url.Action("ClearMonth")",
+                type: "POST",
+                data: "date=" + date,
+                success: function () {
+                    RefreshTable();
+                }});}};
+
+
+    function dayConcrete(d) {
+        $("#dayyy").slideDown(0);
+
+        $.ajax({
+            url: "@Url.Action("DayConcrete")",
+            type: "POST",
+            data: "date=" + d,
+            success: function (response) {
+                $("#dayyy").html(response);
+            }
+        });
+    }
+
+    function getData(eid, date) {
+        $("#dataaa").slideDown(300);
+        $.ajax({
+            url: "@Url.Action("DayConcreteEm")",
+            type: "POST",
+            data: {
+                date: date,
+                employeId: eid
+            },
+            success: function (response) {
+                $("#dataaa").html(response);
+            }
+        });
+    }
+    $(window).load(function () {
+
+        RefreshTable();
+        $('#wrapperTable').show(500);
+
+    });
+
+    function ref(datenow)
+    {
+        date = datenow;
+        $.ajax({
+            url: "@Url.Action("Monthes")",
+            type: "POST",
+            data: "date=" + datenow,
+            success: function (response) {
+            $("#monthdates").html(response);
+        }
+        });
+
+
+        $.ajax({
+            url: "@Url.Action("Tables")",
+            type: "POST",
+            data: {
+                all: $("#allcheck").prop('checked'),
+                date: datenow,
+
+            },
+        success: function (response) {
+            $("#tabledata").html(response);
+        }
+        });
+
+        $('#wraploading').slideUp(500);
+    }
+
+    function RefreshTable() {
+        ref(date);
+    };
+
+    function closeDiv1() {
+        $("#dataaa").slideUp(500);
+
+        RefreshTable(); RefreshTable();
+    }
+    function closeDiv2() {
+        $("#dayyy").slideUp(500);
+
+        RefreshTable(); RefreshTable();
+    }
+
+    function closediv3() {
+        $('#mothesLiteralsEx').slideUp(500);
+        RefreshTable(); RefreshTable();
+    };
+
+
+
+
+
+</script>
+@section scripts
+{
+    @Scripts.Render("~/Scripts/jquery-2.2.1.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+}
+@section styles{
+    @Styles.Render("~/Content/StyleSheetWorkdays.css")
+    @Styles.Render("~/Content/StyleSheetMainTable.css")
+}

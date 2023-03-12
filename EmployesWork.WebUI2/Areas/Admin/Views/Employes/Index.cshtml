@@ -1,0 +1,139 @@
+﻿@{ViewBag.Title = "Профили работников"; }
+
+<div id="main"></div>
+   <div id="wrapperPart">
+
+</div>
+
+<script>
+
+
+    $(window).load(function () {
+
+        refresh();
+    });
+    function refresh() {
+        $.ajax({
+            url: "@Url.Action("Main")",
+            type: "POST",
+
+        success: function (response) {
+            $("#main").html(response);
+        }
+    });
+    };
+
+
+
+    function create() {
+        $.ajax({
+            url: "@Url.Action("Create")",
+            type: "GET",
+
+            success: function (response) {
+                $("#wrapperPart").html(response);
+                $("#wrapperPart").slideDown(500);
+            }
+        });
+    };
+
+    function createp() {
+        $.ajax({
+            url: "@Url.Action("Create")",
+            type: "POST",
+        data: {
+            Id: 0,
+            PersonnelId: $('#PersonnelId').val(),
+            Name: $('#Name').val(),
+            Description: $('#Description').val(),
+            ING: $('#ING').attr("checked") == 'checked',
+            ShedulesId: $('#ShedulesId').val(),
+            Show: $('#Show').attr("checked") == 'checked'
+        },
+        success: function (response) {
+            $("#wrapperPart").html("");
+            $("#wrapperPart").slideUp(500);
+            refresh();
+        }
+    });
+    };
+
+    function details(id) {
+        $.ajax({
+            url: "@Url.Action("Details")",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $("#wrapperPart").html(response);
+                $("#wrapperPart").slideDown(500);
+            }
+        });
+    };
+    function edit(id) {
+        $.ajax({
+            url: "@Url.Action("Edit")",
+            type: "GET",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $("#wrapperPart").html(response);
+                $("#wrapperPart").slideDown(500);
+            }
+        });
+    };
+
+
+
+    function deleteE(id) {
+        $.ajax({
+            url: "@Url.Action("Delete")",
+            type: "GET",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $("#wrapperPart").html(response);
+                $("#wrapperPart").slideDown(500);
+            }
+        });
+    };
+
+    function deleteconfirm(id) {
+        $.ajax({
+            url: "@Url.Action("DeleteConfirmed")",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $("#wrapperPart").html("");
+                $("#wrapperPart").slideUp(500);
+                refresh();
+            }
+        });
+    };
+
+    function close() {
+       
+        $('#wrapperPart').slideUp(500);
+        $('#wrapperPart').html('');
+        refresh();
+    };
+
+</script>
+
+
+@section scripts
+{
+    @Scripts.Render("~/Scripts/jquery-2.2.1.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+}
+
+@section styles{
+    @Styles.Render("~/Content/StyleSheetEmployesMain.css")
+    
+    }

@@ -1,0 +1,42 @@
+﻿@model EmployesWork.Domain.Shedule
+
+@{
+    
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="default_header_2">@ViewBag.Title</h2>
+<div class="wrap_table_edit_shedule_concrete">
+    @using (Html.BeginForm("EditShedulesConcrete", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <table>
+
+
+
+            @Html.HiddenFor(model => model.Id)
+
+            <tr>
+                <td>Бригада</td>
+                <td>
+                    @Html.EditorFor(model => model.Brig)
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>График</td>
+                <td>
+                    @Html.EditorFor(model => model.Sheduler)
+
+                </td>
+            </tr>
+
+        </table>
+   
+
+    <p class="subm"><input type="submit" value="Сохранить" /></p>
+    <p class="subm"><a href="@ViewBag.Referer">Назад</a></p>
+    }
+</div>

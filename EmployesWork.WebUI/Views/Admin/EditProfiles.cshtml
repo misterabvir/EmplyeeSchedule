@@ -1,0 +1,46 @@
+﻿@model IEnumerable<EmployesWork.Domain.Employe>
+
+@{
+    
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="default_header_2">@ViewBag.Title</h2>
+
+<div class="table_edit_profiles_wrap">
+
+    <table class="table_edit_profiles">
+        <caption>@Html.ActionLink("Добавить", "Create")</caption>
+        <tr>
+            <th>Табельный<br/>номер</th>
+            <th class="table_edit_profiles_th_name">ФИО</th>
+            <th class="table_edit_profiles_th_desc">Должность</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PersonnelId</td>
+                <td class="table_edit_profiles_td_name">@Html.ActionLink(item.Name, "Edit", new { item.Id }, new { title="Редактировать данные " + item.Name})</td>
+                <td>@item.Description</td>
+                <td>
+                    @using (Html.BeginForm("Delete", "Admin"))
+                    {
+                        @Html.Hidden("EmployeId", item.Id)
+
+                        if (item.Show == true)
+                        {
+                        <input type="submit" value="Удалить" title="Удалить @item.Name"/>
+                        }
+                        else
+                        {
+                            <input type="submit" value="Добавить" title="Добавить @item.Name" />
+                        }
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+    <p class="subm">@Html.ActionLink("Назад", "Index")</p>  
+</div>

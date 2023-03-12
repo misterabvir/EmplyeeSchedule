@@ -1,0 +1,640 @@
+﻿@model EmployesWork.WebUI.Models.ModelBox
+
+@{
+    
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2  class="default_header_2">
+    @{
+                DateTime dtnext = ViewBag.Date;
+                dtnext = dtnext.AddMonths(1);
+                DateTime dtprev = ViewBag.Date;
+                dtprev = dtprev.AddMonths(-1);
+    }
+    <a href="/admin/FillMonth/@dtprev.Year/@dtprev.Month">&larr;</a>
+    @ViewBag.Title
+    <a href="/admin/FillMonth/@dtnext.Year/@dtnext.Month">&rarr;</a>
+</h2>
+
+
+
+
+<div class="wrapperTable dayOfMonthWrapper">
+    <table class="main_table_in_main_tables_block">
+        <caption>Табель выходов <a href="/Admin/FillMonthAll/@ViewBag.Date.Year/@ViewBag.Date.Month"  class="icon icon_fill" title="Полностью заполнить табель на @ViewBag.Title"></a>
+          <a href="/Admin/FillClearAll/@ViewBag.Date.Year/@ViewBag.Date.Month" class="icon icon_dell" title="Полностью очистить табель на @ViewBag.Title"></a> 
+         <a href="#" id="test" onClick="javascript:fnExcelReport();"  class="icon  icon_excel" title="Скачать табель на @ViewBag.Title в формате Excel"></a></caption>
+        <thead>
+            <!-- #region Основная шапка -->
+            <tr>
+                <th rowspan="2">Действие</th>
+                <th rowspan="2">Таб.№</th>
+                <th rowspan="2">ФИО</th>
+                <th colspan="@ViewBag.LengthMonth">@ViewBag.Title</th>
+            </tr>
+            @{
+                var sheds = Model.Shedules;
+                int len = sheds.Count() - 1;
+            }
+            <!-- #endregion -->
+            <!-- #region Числа месяца в шапке -->
+            <tr>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    if ((int)dt.DayOfWeek == 0 || (int)dt.DayOfWeek == 6)
+                    {
+                        <th class="day_of_rest"><a href="/Admin/day/@ViewBag.Date.Year/@ViewBag.Date.Month/@i"  title="Проставить выход для всех за @dt.ToShortDateString()">@i</a></th>
+                    }
+                    else
+                    {
+                        <th class="day_of_work"><a href="/Admin/day/@ViewBag.Date.Year/@ViewBag.Date.Month/@i"  title="Проставить выход для всех за @dt.ToShortDateString()">@i</a></th>
+                    }
+                }
+
+            </tr>
+            <!-- #endregion -->
+        </thead>
+        <tbody>
+            <!-- #region Вывод текущих литералов -->
+
+            @foreach (var item in Model.Employes)
+            {
+                if (item.Show == false) { continue; }
+                <tr>
+                    <!-- #region Имена, номера, должности, дефолтный график -->
+
+                    <td style="min-width:90px; text-align:left;">
+                      <a href="/Admin/FillMonthConcrete/@item.Id/@ViewBag.Date.Year/@ViewBag.Date.Month" class="icon_fill icon" title="Заполнить месяц для @item.Name"></a>
+                        <a href="/Admin/FillClearConcrete/@item.Id/@ViewBag.Date.Year/@ViewBag.Date.Month" class="icon_dell icon" title="Очистить месяц для @item.Name"></a>
+                    </td>
+                    @if (item.ING.GetValueOrDefault())
+                    {
+                        <td class="employer_id employe_is_ingenier">@item.PersonnelId</td>
+                        <td class="name_of_Employe employe_is_ingenier"><a href="/admin/VacationIndex/@item.Id/@ViewBag.Date.Year/@ViewBag.Date.Month"  title="Проставить отпуск для @item.Name на @ViewBag.Title">@item.Name</a><br /><span class="description_of_Employe">@item.Description</span></td>
+                    }
+                    else
+                    {
+                        <td class="employer_id">@item.PersonnelId</td>
+                        <td class="name_of_Employe"><a href="/admin/VacationIndex/@item.Id/@ViewBag.Date.Year/@ViewBag.Date.Month" title="Проставить отпуск для @item.Name на @ViewBag.Title">@item.Name</a><br /><span class="description_of_Employe">@item.Description</span></td>
+                    }
+                    <!-- #endregion -->
+                    <!-- #region Литералы -->
+
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                    {
+                        DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                        var day = Model.Days.FirstOrDefault(x => x.Date.ToShortDateString() == dt.ToShortDateString() && x.EmployeId == item.Id);
+                        if (day != null)
+                        {
+                            var lit = Model.Days
+                                .FirstOrDefault(x => x.Date.ToShortDateString() == dt.ToShortDateString() && x.EmployeId == item.Id)
+                               .Literal;
+                            if (ViewBag.Help.GetExit(lit))
+                            {
+                                <td class="employe_is_worked"><a href="~/Admin/FillChangeDayConcrete/@item.Id/@dt.Year/@dt.Month/@dt.Day"  title="Изменить выход для @item.Name за @dt.ToShortDateString()">@lit</a></td>
+                            }
+                            else
+                            {
+                                <td class="employe_is_no_worked"><a href="~/Admin/FillChangeDayConcrete/@item.Id/@dt.Year/@dt.Month/@dt.Day"  title="Изменить выход для @item.Name за @dt.ToShortDateString()">@lit</a></td>
+                            }
+
+                        }
+                        else {
+                            <td class="empty"><a href="~/Admin/FillChangeDayConcrete/@item.Id/@dt.Year/@dt.Month/@dt.Day"   title="Изменить выход для @item.Name за @dt.ToShortDateString()">&nbsp;</a></td>
+                        }
+
+                    }
+
+                    <!-- #endregion -->
+                </tr>
+            }
+
+            <!-- #endregion -->
+        </tbody>
+    </table>       
+</div>
+
+<div class="wrapperTable existsOfMonthWrapper">
+    <table  id="table2">
+        <caption>Итог выходов за день</caption>
+        
+            <!-- #region Вышло на работу -->
+            <!-- #region Заголовок и числа месяца -->
+            <tr class="itogs_of_day_head_area">
+                <td colspan="2" rowspan="2" class="itogs_of_day_head itogs_of_day_head_clear">Итого за сутки отработало</td>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+            {
+                DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                if ((int)dt.DayOfWeek == 0 || (int)dt.DayOfWeek == 6)
+                {
+                        <th class="day_of_rest itogs_of_day_head_clear">@i</th>
+                    }
+                    else
+                    {
+                        <th class="day_of_work itogs_of_day_head_clear">@i</th>
+                    }
+                }
+            </tr>
+            <!-- #endregion -->
+            <!-- #region Расчет выходов общий -->
+            <tr class="itogs_of_day_head_area">
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetExitDayCount(dt, Model.Days);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td class="itogs_result">@result</td>
+                }
+            </tr>
+            <!-- #endregion -->
+            <!-- #region Вывод выхода по графикам -->
+            @{
+                sheds = Model.Shedules.Where(s => Model.Days.Where(w => w.Employe.Show == true && w.ShedulesId == s.Id).Count() != 0);
+                len = sheds.Count() - 1;
+            }
+            @for (int j = 0; j < sheds.Count(); j++)
+            {
+                if (sheds.ToArray()[j].Id == 6)
+                {
+                    continue;
+                }
+                <tr class="itogs_of_day_head_area">
+                    @if (j == 0)
+                {
+                        <td rowspan="@len" class="itogs_description">По графикам</td>
+                    }
+                    <td class="itogs_description_details">@sheds.ToArray()[j].Brig Гр.@sheds.ToArray()[j].Sheduler</td>
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetExitDayCount(dt, Model.Days, @sheds.ToArray()[j].Id);
+                    string result = count == 0 ? "" : count.ToString();
+                        <td>@result</td>
+                    }
+                </tr>
+            }
+
+            <!-- #endregion -->
+            <!-- #region Вывод выходов по инженерам -->
+
+            <tr class="itogs_of_day_head_area_igenier">
+                <td colspan="2" class="itogs_of_day_head">Инженеров</td>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetExitDayCount(dt, Model.Days, true);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td class="itogs_result">@result</td>
+                }
+            </tr>
+
+            @for (int j = 0; j < sheds.Count(); j++)
+            {
+                if (sheds.ToArray()[j].Id == 6)
+                {
+                    continue;
+                }
+                <tr class="itogs_of_day_head_area_igenier">
+                    @if (j == 0)
+                    {
+                        <td rowspan="@len" class="itogs_description">По графикам</td>
+                    }
+                    <td class="itogs_description_details">@sheds.ToArray()[j].Brig Гр.@sheds.ToArray()[j].Sheduler</td>
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetExitDayCount(dt, Model.Days, @sheds.ToArray()[j].Id, true);
+                    string result = count == 0 ? "" : count.ToString();
+                        <td>@result</td>
+                    }
+                </tr>
+            }
+            <!-- #endregion -->
+            <!-- #region Вывод выходов для слесарей -->
+            <tr class="itogs_of_day_head_area_no_igenier">
+                <td colspan="2" class="itogs_of_day_head">Слесарей</td>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetExitDayCount(dt, Model.Days, false);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td class="itogs_result">@result</td>
+                }
+            </tr>
+
+            @for (int j = 0; j < sheds.Count(); j++)
+            {
+                if (sheds.ToArray()[j].Id == 6)
+                {
+                    continue;
+                }
+                <tr class="itogs_of_day_head_area_no_igenier">
+                    @if (j == 0)
+                {
+                        <td rowspan="@len" class="itogs_description">По графикам</td>
+                    }
+                    <td class="itogs_description_details">@sheds.ToArray()[j].Brig Гр.@sheds.ToArray()[j].Sheduler</td>
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetExitDayCount(dt, Model.Days, @sheds.ToArray()[j].Id, false);
+                    string result = count == 0 ? "" : count.ToString();
+                        <td>@result</td>
+                    }
+                </tr>
+            }
+
+            <!-- #endregion -->
+            <!-- #endregion -->
+
+    </table>
+    
+    <table  id="table3">
+        <caption>Итог неявок, простоев за день</caption>
+            <!-- #region Не вышло на работу -->
+            <!-- #region Общий рачет для отсутствующих -->
+
+            <tr class="itogs_of_day_head_area">
+                <td colspan="2" rowspan="2" class="itogs_of_day_head itogs_of_day_head_clear">Итого за сутки отсутствовало</td>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+            {
+                DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                if ((int)dt.DayOfWeek == 0 || (int)dt.DayOfWeek == 6)
+                {
+                        <th class="day_of_rest itogs_of_day_head_clear">@i</th>
+                    }
+                    else
+                    {
+                        <th class="day_of_work itogs_of_day_head_clear">@i</th>
+                    }
+                }
+
+            </tr>
+            <tr class="itogs_of_day_head_area">
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetNoExitDayCount(dt, Model.Days);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td class="itogs_result">@result</td>
+                }
+            </tr>
+            @{string[] lits = ViewBag.Help.GetLiterals(Model.Days);}
+            @for (int j = 0; j < lits.Length; j++)
+            {
+                <tr class="itogs_of_day_head_area">
+                    @if (j == 0)
+                    {
+
+                        <td rowspan="@lits.Length" class="itogs_description">Причина</td>
+                    }
+                    <td class="itogs_description_details">@lits[j]</td>
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                    {
+                        DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                        var count = ViewBag.Help.GetNoExitDayCount(dt, Model.Days, lits[j]);
+                        string result = count == 0 ? "" : count.ToString();
+                        <td>@result</td>
+                    }
+
+                </tr>
+            }
+            <!-- #endregion -->
+            <!-- #region Вывод остутствующих инженеров -->
+
+            <tr class="itogs_of_day_head_area_igenier">
+                <td colspan="2" class="itogs_of_day_head">Инженеров</td>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetNoExitDayCount(dt, Model.Days, true);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td class="itogs_result">@result</td>
+                }
+            </tr>
+
+
+            @for (int j = 0; j < lits.Length; j++)
+            {
+                <tr class="itogs_of_day_head_area_igenier">
+                    @if (j == 0)
+                    {
+                        <td rowspan="@lits.Length" class="itogs_description">Причина</td> }
+                    <td class="itogs_description_details">@lits[j]</td>
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                    {
+                        DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                        var count = ViewBag.Help.GetNoExitDayCount(dt, Model.Days, lits[j], true);
+                        string result = count == 0 ? "" : count.ToString();
+                        <td>@result</td>
+                    }
+                </tr>
+            }
+
+
+            <!-- #endregion -->
+            <!-- #region Вывод отсутствующих слесарей -->
+
+            <tr class="itogs_of_day_head_area_no_igenier">
+                <td colspan="2" class="itogs_of_day_head">Слесарей</td>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                    var count = ViewBag.Help.GetNoExitDayCount(dt, Model.Days, false);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td class="itogs_result">@result</td>
+                }
+            </tr>
+
+
+            @for (int j = 0; j < lits.Length; j++)
+            {
+                <tr class="itogs_of_day_head_area_no_igenier">
+                    @if (j == 0)
+                {
+                        <td rowspan="@lits.Length" class="itogs_description">Причина</td>
+                    }
+                    <td class="itogs_description_details">@lits[j]</td>
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                    {
+                        DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                        var count = ViewBag.Help.GetNoExitDayCount(dt, Model.Days, lits[j], false);
+                        string result = count == 0 ? "" : count.ToString();
+                        <td>@result</td>
+                    }
+                </tr>
+            }
+
+            <!-- #endregion -->
+            <!-- #endregion -->
+        
+    </table>
+</div>
+
+<div class="wrapperTable itogsOfMonthWrapperHours">
+    <table class="itogsOfMonthWrapperHours_table"  id="table4">
+        <caption>Количество выходов и отработанных часов</caption>
+        <thead>
+            <tr>
+                <th rowspan="1">Таб.№</th>
+                <th rowspan="1">ФИО</th>
+                <th colspan="1">
+                    <table class="inner_table_employe_info_for_month">
+                        <tr>
+                            <td rowspan="2">График</td>
+                            <td rowspan="2">Выход</td>
+                            <td rowspan="1" colspan="4">Часы</td>
+                        </tr>
+                        <tr>
+                            <td>Дневные</td>
+                            <td>Вечерние</td>
+                            <td>Ночные</td>
+                            <td>Всего</td>
+                        </tr>
+                    </table>
+                </th>
+
+                <th rowspan="1">Всего выходов</th>
+                <th rowspan="1">Всего часов</th>
+            </tr>
+
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Employes)
+    {
+        if (item.Show == false) { continue; }
+        var shedulesForEmploye = ViewBag.Help.GetShedules_Admin(item, ViewBag.Date);
+                <tr>
+
+                    @if (item.ING.GetValueOrDefault())
+                {
+                        <td class="employer_id employe_is_ingenier">@item.PersonnelId</td>
+                        <td class="name_of_Employe employe_is_ingenier">@item.Name</td>
+                    }
+                    else
+                    {
+                        <td class="employer_id">@item.PersonnelId</td>
+                        <td class="name_of_Employe">@item.Name</td>
+                    }
+                    <td colspan="1" class="inner_table_employe_info_for_month_colsInn">
+                        <table class="inner_table_employe_info_for_month">
+
+                            @for (int i = 0; i < shedulesForEmploye.Length; i++)
+                            {
+                                <tr>
+                                    <td>@shedulesForEmploye[i].Brig Гр.@shedulesForEmploye[i].Sheduler</td>
+                                    @{
+                                        var count = ViewBag.Help.GetCountExitForEmployeInMonth_Admin(ViewBag.Date, item, shedulesForEmploye[i].Id);
+                                        string str = count == 0 ? "" : count.ToString();
+                                        <td>@str</td>
+                                        count = ViewBag.Help.GetCountExitForEmployeInMonthHD_Admin(ViewBag.Date, item, shedulesForEmploye[i].Id);
+                                        str = count == 0 ? "" : count.ToString();
+                                        <td>@str</td>
+                                        count = ViewBag.Help.GetCountExitForEmployeInMonthED_Admin(ViewBag.Date, item, shedulesForEmploye[i].Id);
+                                        str = count == 0 ? "" : count.ToString();
+                                        <td>@str</td>
+                                        count = ViewBag.Help.GetCountExitForEmployeInMonthND_Admin(ViewBag.Date, item, shedulesForEmploye[i].Id);
+                                        str = count == 0 ? "" : count.ToString();
+                                        <td>@str</td>
+                                        count = ViewBag.Help.GetCountExitForEmployeInMonthAll_Admin(ViewBag.Date, item, shedulesForEmploye[i].Id);
+                                        str = count == 0 ? "" : count.ToString();
+                                        <td>@str</td>
+
+
+                                    }
+                                    @if (i == 0)
+                                    {
+
+                                    }
+                                </tr>
+                                        }
+                        </table>
+
+                    </td>
+                    <td class="itogs_result_last">@ViewBag.Help.GetCountExitForEmployeInMonthAllItog_Admin(ViewBag.Date, item)</td>
+                    <td class="itogs_result_last">@ViewBag.Help.GetHoursExitForEmployeInMonthAllItog_Admin(ViewBag.Date, item)</td>
+                </tr>
+                                        }
+        </tbody>
+    </table>
+
+</div>
+
+<div class="wrapperTable itogsOfMonthWrapperNoExists">
+
+    <table class="table_of_no_exists"  id="table5">
+        <caption>Количество неявок, простоев</caption>
+        <tr>
+            <th rowspan="1">Таб.№</th>
+            <th rowspan="1">ФИО</th>
+            @foreach (var dayy in ViewBag.Help.GetNoExistsLiterals(Model.Days))
+            {
+                <th rowspan="1">@dayy</th>
+            }
+        </tr>
+        @foreach (var item in Model.Employes.OrderBy(x => x.ShedulesId).OrderByDescending(x => x.ING))
+        {
+            if (item.Show == false) { continue; }
+            var shedulesForEmploye = ViewBag.Help.GetShedules(item, ViewBag.Date, DateTime.Now.Day);
+            <tr>
+
+                @if (item.ING.GetValueOrDefault())
+                {
+                        <td class="employer_id employe_is_ingenier">@item.PersonnelId</td>
+                        <td class="name_of_Employe employe_is_ingenier">@item.Name</td>
+                }
+                else
+                {
+                        <td class="employer_id">@item.PersonnelId</td>
+                        <td class="name_of_Employe">@item.Name</td>
+                }
+
+                @foreach (var dayy in ViewBag.Help.GetNoExistsLiterals(Model.Days))
+                {
+                    int count = ViewBag.Help.GetCountNoExistInMonth_Admin(ViewBag.Date, item, dayy);
+                    string result = count == 0 ? "" : count.ToString();
+                    <td>@result</td>
+                }
+
+
+
+
+            </tr>
+
+
+        }
+    </table>
+</div>
+
+
+
+<!-- #region table for excel -->
+
+<div style="display:none;">
+    <table id="table1">
+        <caption>Табель выходов</caption>
+        <thead>
+            <!-- #region Основная шапка -->
+            <tr>
+
+                <th rowspan="2">Таб.№</th>
+                <th rowspan="2">ФИО</th>
+                <th colspan="@ViewBag.LengthMonth">@ViewBag.Title</th>
+            </tr>
+            @{
+                sheds = Model.Shedules;
+                len = sheds.Count() - 1;
+            }
+            <!-- #endregion -->
+            <!-- #region Числа месяца в шапке -->
+            <tr>
+                @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                {
+                    DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+
+                    <th>@i</th>
+
+                }
+
+            </tr>
+            <!-- #endregion -->
+        </thead>
+        <tbody>
+            <!-- #region Вывод текущих литералов -->
+
+            @foreach (var item in Model.Employes)
+            {
+                if (item.Show == false) { continue; }
+                <tr>
+                    <!-- #region Имена, номера, должности, дефолтный график -->
+
+                    <td>@item.PersonnelId</td>
+                    <td>@item.Name</td>
+
+
+                    <!-- #endregion -->
+                    <!-- #region Литералы -->
+
+                    @for (int i = 1; i <= ViewBag.LengthMonth; i++)
+                    {
+                        DateTime dt = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+                        var day = Model.Days.FirstOrDefault(x => x.Date.ToShortDateString() == dt.ToShortDateString() && x.EmployeId == item.Id);
+                        if (day != null)
+                        {
+                            var lit = Model.Days
+                                .FirstOrDefault(x => x.Date.ToShortDateString() == dt.ToShortDateString() && x.EmployeId == item.Id)
+                               .Literal;
+                            <td>@lit</td>
+
+
+                        }
+                        else {
+                            <td></td>
+                        }
+
+                    }
+
+                    <!-- #endregion -->
+                </tr>
+            }
+
+            <!-- #endregion -->
+        </tbody>
+    </table>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    function fnExcelReport() {
+        var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+
+        tab_text = tab_text + '<x:Name>@ViewBag.Title рапорт</x:Name>';
+
+        tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+        tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+
+        tab_text = tab_text + "<table border='1px'  align='center'>";
+        tab_text = tab_text + $('#table1').html();
+        tab_text = tab_text + '</table>';
+
+        tab_text = tab_text + "<table border='1px'>";
+        tab_text = tab_text + $('#table2').html();
+        tab_text = tab_text + '</table>';
+
+
+        tab_text = tab_text + "<table border='1px'>";
+        tab_text = tab_text + $('#table3').html();
+        tab_text = tab_text + '</table>';
+
+        tab_text = tab_text + "<table border='1px'>";
+        tab_text = tab_text + $('#table4').html();
+        tab_text = tab_text + '</table>';
+
+        tab_text = tab_text + "<table border='1px'>";
+        tab_text = tab_text + $('#table5').html();
+        tab_text = tab_text + '</table></body></html>';
+
+
+        var data_type = 'data:application/vnd.ms-excel';
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            if (window.navigator.msSaveBlob) {
+                var blob = new Blob([tab_text], {
+                    type: "application/csv;charset=utf-8;"
+                });
+                navigator.msSaveBlob(blob, '@ViewBag.Title рапорт.xls');
+            }
+        } else {
+            $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+            $('#test').attr('download', '@ViewBag.Title рапорт');
+        }
+
+    }
+</script>
+
+<!-- #endregion -->

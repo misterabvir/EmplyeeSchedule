@@ -1,0 +1,37 @@
+﻿@model EmployesWork.WebUI2.Shedules
+
+@{
+    ViewBag.Title = "Создать график";
+
+}
+
+
+
+    
+    <div class="form-horizontal" id="createshwrap">
+
+       
+        <div class="form-group">
+            @Html.LabelFor(model => model.Brig,"Бригада", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Brig, new { htmlAttributes = new { @class = "form-control", id = "Brig" } })
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sheduler,"График", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Sheduler, new { htmlAttributes = new { @class = "form-control", id = "Sheduler" } })
+                
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a href="javascript:close()"><input type="button" value="Создать" class="btn btn-default" onclick="createp()" /><input type="button" value="Закрыть" /></a>
+            </div>
+        </div>
+    </div>
+
+

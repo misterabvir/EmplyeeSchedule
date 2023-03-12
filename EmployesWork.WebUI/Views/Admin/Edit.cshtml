@@ -1,0 +1,73 @@
+﻿@model EmployesWork.Domain.Employe
+
+@{
+    
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="default_header_2">@Model.Name</h2>
+<h4 class="default_header_4">@Model.Description</h4>
+<div class="wrap_edit_profile_concrete">
+    @using (Html.BeginForm("Edit", "Admin", FormMethod.Post))
+    {
+        <input type="hidden" value="@Model.Id" name="EmployeId" />
+        
+        
+        <table>
+            <tr>
+             <td>Табельный номер</td>
+                <td>
+                    @Html.EditorFor(model => model.PersonnelId)
+                </td>            
+            </tr>
+
+            <tr>
+                <td>ФИО</td>
+                <td>
+                    @Html.EditorFor(model => model.Name)
+                </td>
+            </tr>
+
+            <tr>
+                <td>Должность</td>
+                <td>
+                    @Html.EditorFor(model => model.Description)
+                </td>
+            </tr>
+            <tr>
+                <td>Инженер?</td>
+                <td>
+                    @{string check = Model.ING.GetValueOrDefault() ? "checked" : "";}
+                    <input type="checkbox" name="ING" , value="1" @check />
+                </td>
+            </tr>
+
+            <tr>
+                <td>График по умолчанию</td>
+                <td>
+                    <select name="SheduleId">
+                        @foreach (var item in ViewBag.Shedules)
+                        {
+                            if (item.Id == 6) { continue; }
+                            if (Model.ShedulesId == item.Id)
+                            {
+                                        <option selected value="@item.Id">@item.Brig Гр.@item.Sheduler</option>}
+                            else
+                            {
+                                        <option value="@item.Id">@item.Brig Гр.@item.Sheduler</option>}
+                        }
+                    </select>
+                </td>
+            </tr>
+
+        </table>
+        <p class="subm">
+            <input type="submit" value="Сохранить" />
+        </p>
+        
+        <p class="subm">
+            <a href="@ViewBag.Referer">Назад</a>
+        </p>
+ }
+</div>
+

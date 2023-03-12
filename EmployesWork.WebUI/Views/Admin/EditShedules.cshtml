@@ -1,0 +1,37 @@
+﻿@model IEnumerable<EmployesWork.Domain.Shedule>
+
+@{
+   
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2  class="default_header_2">@ViewBag.Title</h2>
+
+
+<div class="wrap_table_edit_shedules">
+    <table class="table">
+        <caption>@Html.ActionLink("Добавить", "CreateShedulesConcrete", null, new { @class = "icon icon_add" })</caption>
+
+
+        @foreach (var item in Model)
+        {
+            if (item.Id == 6) { continue; }
+            <tr>
+                <td>
+
+                    @Html.ActionLink(item.Brig + " Гр." + item.Sheduler, "EditShedulesConcrete", new { id = item.Id }, new { @class = "icon icon_edit" })
+                </td>
+                <td>
+                    @Html.ActionLink("Удалить", "DeleteShedulesConcrete", new { id = item.Id }, new { @class = "icon icon_del" })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+    <p class="subm">
+        @Html.ActionLink("В начало", "Index")
+    </p>
+</div>
+
+

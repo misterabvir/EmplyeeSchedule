@@ -1,0 +1,50 @@
+﻿@model EmployesWork.WebUI2.Employes
+
+@{
+    ViewBag.Title = "Удаление профиля";
+}
+
+
+<div id="delwrap">
+    <h3>Вы уверены, что хотите удалить профиль?</h3>
+    <div>
+
+        <dl class="dl-horizontal">
+            <dt>
+                Табельный номер
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PersonnelId)
+            </dd>
+
+            <dt>
+                ФИО
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                Должность
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+
+                <a href="javascript:close()"><input type="button" value="Удалить" class="btn btn-default" onclick="deleteconfirm(@Model.Id)" /><input type="button" value="Закрыть" /></a>
+            </div>
+        }
+    </div>
+</div>

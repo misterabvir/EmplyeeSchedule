@@ -1,0 +1,21 @@
+﻿@using EmployesWork.WebUI2.Areas.Admin.Models;
+@{ 
+    DateTime prMonth = ViewBag.Date.AddMonths(-1);
+    DateTime nowMonth = ViewBag.Date;
+    DateTime neMonth = ViewBag.Date.AddMonths(1);
+
+}
+
+
+
+    <a href="javascript:ref('@prMonth.ToShortDateString()')">
+        
+        &larr;
+    </a>
+    <a href="javascript:ref('@nowMonth.ToShortDateString()')">
+        @(new HelpClass().NameOfMonth(nowMonth.Month) + ", " + nowMonth.Year)
+    </a>
+    <a href="javascript:ref('@neMonth.ToShortDateString()')">
+        &rarr;
+    </a>
+

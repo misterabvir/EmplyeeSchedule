@@ -1,0 +1,62 @@
+﻿.wrap_table_edit_shedule_concrete table td {
+    width:80px;
+}
+
+
+
+.wrap_table_edit_shedule_concrete input[type=text] {
+    width:50px;
+    text-align:center;
+    border: none;
+    border-bottom:1px dotted #333;
+    font-size:1.2em;
+    margin-bottom: 0px;
+    /*margin-top:-10px;*/
+    padding:15px;
+}
+.wrap_table_edit_shedule_concrete select {
+    width:150px;
+    text-align:center;
+    border: none;
+    border-bottom:1px dotted #333;
+    font-size:1.2em;
+    padding:15px;
+}
+.wrap_table_edit_shedule_concrete .subm {
+   
+    width:525px;
+    margin:0 auto;
+    box-shadow:0 0 1px 2px black;
+
+}
+.wrap_table_edit_shedule_concrete .subm input[type=submit] {
+    width:100%;
+    height:40px;
+    text-align:center;
+    display:block;
+    padding:10px;
+    font-size:16px;
+    background-color:#9d0c0c;
+    border:none;
+    color:#f5f5f5;
+    cursor:pointer;
+    
+}
+.wrap_table_edit_shedule_concrete .subm a {
+    width:100%;
+    height:20px;
+    text-align:center;
+    display:block;
+    padding:10px 0 ;
+    font-size:16px;
+    text-decoration:none;
+    background-color:#9d0c0c;
+    border:none;
+    color:#f5f5f5;
+    margin-top:5px;
+    margin-bottom:20px;
+}
+.wrap_table_edit_shedule_concrete .subm a:hover,
+.wrap_table_edit_shedule_concrete .subm input[type=submit]:hover {
+    color:gold;
+}

@@ -1,0 +1,74 @@
+﻿@model EmployesWork.WebUI.Models.ModelBox
+
+@{
+    ViewBag.Title = "Неявки в диапазоне";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="default_header_2">Неявки в диапазоне</h2>
+<div class="wrap_table_vacation">
+    @{
+        var employe = Model.Employes.Where(e => e.Id == ViewBag.Id).FirstOrDefault();
+        var m = ViewBag.Date.Month.ToString().Length == 1 ? "0" + ViewBag.Date.Month : ViewBag.Date.Month;
+        var dtMin = ViewBag.Date.Year + "-" + m + "-01";
+        var dtMax = ViewBag.Date.Year + "-" + m + "-" + DateTime.DaysInMonth(ViewBag.Date.Year, ViewBag.Date.Month);
+
+        using (Html.BeginForm("VacationIndexSet", "Admin", FormMethod.Post))
+        {
+            <table>
+
+
+
+                <tr>
+                    <td class="description_area">Имя работника</td>
+                    <td class="name_of_Employe">@employe.Name</td>
+                </tr>
+                <tr>
+                    <td class="description_area">Литерал</td>
+                    <td><input type="text"  name="literal" list="sheduleslist"/>
+                        <datalist id="sheduleslist">
+                            @foreach (var shed in Model.Days.Select(w => w.Literal).Distinct().ToArray())
+                            {
+                                <option>@shed</option>
+                            }
+
+                        </datalist>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="description_area">Дата начала отпуска</td>
+                    <td><input type="date" name="startDay" min="@dtMin" max="@dtMax" /></td>
+                </tr>
+                <tr>
+                    <td class="description_area">Дата окончания отпуска</td>
+                    <td><input type="date" name="endDay" min="@dtMin" max="@dtMax" /></td>
+                </tr>
+                <tr>
+                    <td class="description_area">Поставить замену</td>
+                    <td>
+                        <input type="hidden" name="employeId" value="@employe.Id" />
+                        <input type="hidden" name="Date" value="@ViewBag.Date" />
+                        <select name="idChangerEmploye">
+                            <option value="0" selected>Без замены</option>
+                            @foreach (var item in Model.Employes.Where(e => e.Id != employe.Id))
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                </tr>
+
+
+
+
+            </table>
+
+            <p class="subm">
+                <input type="submit" value="Применить" />
+            </p>
+            <p class="subm">
+                @Html.ActionLink("Назад", "FillMonth", new { year = ViewBag.Date.Year, month = ViewBag.Date.Month })
+            </p>
+        }
+    }
+</div>

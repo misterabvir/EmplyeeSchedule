@@ -1,0 +1,201 @@
+﻿@using EmployesWork.WebUI2.Areas.Admin.Models
+@{
+    DateTime date = ViewBag.Date != null ? ViewBag.Date : DateTime.Now;
+    Employes employe = ViewBag.Employe;
+    WorkDays workday = ViewBag.WorkDays != null ? ViewBag.WorkDays : new WorkDays();
+    IEnumerable<Shedules> sheds = ViewBag.Shedules;
+    Employes[] allempl = ViewBag.AllEmployes;
+    var options = new AjaxOptions()
+    {
+        UpdateTargetId = "calendar",
+        Url = Url.Action("MonthAddExist"),
+    };
+    var options2 = new AjaxOptions()
+    {
+        UpdateTargetId = "calendar",
+        Url = Url.Action("MonthAddNoExist"),
+    };
+}
+
+<div id="wrapcal">
+    <h2>@employe.Name<br /><span>@employe.Description</span></h2>
+
+    <div id="calendar"></div>
+
+    <fieldset>
+        <legend>Изменение выходов</legend>
+        <p>
+            <label><input type="radio" checked="checked" name="selecter" id="shedRadio" onchange="changeStatMon()" />график</label>
+       
+            <label><input type="radio" name="selecter" id="noexRadio" onchange="changeStatMon()" />неявки</label>
+        </p> 
+        <p onclick="reset('ds')">Начальная дата: <span id="ds">отсутсвует</span></p>
+        <p onclick="reset('de')">Конечная дата: <span id="de">отсутсвует</span></p>
+
+        <fieldset id="fieldshed">
+            <legend>
+                Перевести в график
+            </legend>
+            <label>
+               
+                <select id="shedId">
+                    @foreach (var sh in sheds)
+                    {
+                        <option value="@sh.Id" @(employe.ShedulesId == sh.Id ? "selected='selected'" : "")> @sh.Brig @sh.Sheduler</option>
+                    }
+                </select>
+            </label>
+            
+            <input type="button" onclick="inshedule()" value="Сохранить"/>
+        </fieldset>
+
+        <fieldset style="display:none" id="fieldnoex">
+            <legend>
+                Провести неявки
+            </legend>
+
+            <label><input type="text" id="litss" name="lit" placeholder="Литерал"/> </label>
+           
+            <label>
+               
+                <select id="idem">
+                    <option value="0" selected="selected">Без замены</option>
+                    @foreach (var item in allempl)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </label>
+            
+            <input type="button" onclick="addnoexit()"  value="Сохранить"/>
+
+        </fieldset>
+
+    </fieldset>
+    <div onclick="closediv3()"><input type="button" value="Закрыть" /></div>
+
+</div>
+<script>
+    var datestart;
+    var dateend;
+    var emplid = @employe.Id;
+    function refresh() {
+
+        $.ajax({
+            url: "@Url.Action("MonthForEmploye")",
+            type: "POST",
+            data: {
+                date: '@date',
+                id: '@employe.Id.ToString()',
+            },
+            success: function (response) {
+                $("#calendar").html(response);
+            }
+        });
+        datestart = undefined;
+        dateend = undefined;
+    };
+    refresh();
+
+    function changeStatMon() {
+        if ($('#shedRadio').prop("checked")) {
+            $('#fieldshed').show();
+            $('#fieldnoex').hide();
+        }
+        else {
+            $('#fieldnoex').show();
+            $('#fieldshed').hide();
+        }
+    };
+
+    function setDate(datett) {
+        if (datestart == undefined && dateend == undefined) {
+            datestart = datett;
+        }
+        else if (dateend == undefined && datestart != undefined) {
+            if (datett <= datestart) {
+                datestart = datett;
+            }
+            else { dateend = datett; }
+        }
+        else if (dateend != undefined && datestart == undefined) {
+            if (datett < dateend) {
+                datestart = datett;
+            }
+            else { dateend = datett; }
+        }
+        else if (dateend != undefined && datestart != undefined) {
+            if (datett <= datestart) datestart = datett;
+            else dateend = datett;
+
+        }
+        $('#ds').html(datestart);
+        $('#de').html(dateend);
+    };
+
+    function reset(idd) {
+        $('#' + idd).html('отсутсвует');
+        if (idd == 'ds') datestart = undefined;
+        else dateend = undefined;
+    };
+
+    function inshedule() {
+
+        if (datestart == undefined || dateend == undefined)
+        {
+            alert('Не выбраны даты');
+            return;
+        }
+
+        var shid = $('#shedId').val();
+
+        $.ajax({
+            url: "@Url.Action("InShedule")",
+            type: "POST",
+            data: {
+                dateStart: datestart,
+                dateEnd: dateend,
+                id: emplid,
+                sheddid: shid,
+            },
+            success: function (response) {
+                refresh();
+            }
+        });
+    };
+
+    function addnoexit() {
+
+        if (datestart == undefined || dateend == undefined)
+        {
+            alert('Не выбраны даты');
+            return;
+        }
+
+        var literal = $('#litss').val();
+        if(literal == '')
+        {
+            alert('Нет литерала');
+            return;       
+        }
+
+        var secid = $('#idem').val();
+
+
+        $.ajax({
+            url: "@Url.Action("AddNoExit")",
+            type: "POST",
+            data: {
+                dateStart: datestart,
+                dateEnd: dateend,
+                id: emplid,
+                literal: literal,
+                secondId: secid,
+            },
+            success: function (response) {
+                refresh();
+            }
+        });
+    };
+
+</script>

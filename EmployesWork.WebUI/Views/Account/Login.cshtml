@@ -1,0 +1,16 @@
+﻿@model EmployesWork.WebUI.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Вход в систему";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2  class="default_header_2">@ViewBag.Title</h2>
+<div class="wrap_password_container">
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel()
+        <p><input type="submit" value="Войти" /></p>
+    }
+</div>

@@ -1,0 +1,28 @@
+﻿@model DateTime?
+
+
+
+@{
+    var mod = DateTime.Now;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    if (Model != null) { mod = Model.Value; }
+    string name_prev_month = ViewBag.Help.NameOfMonth(mod.AddMonths(-1).Month);
+    string name_month = ViewBag.Help.NameOfMonth(mod.Month);
+    string name_next_month = ViewBag.Help.NameOfMonth(mod.AddMonths(1).Month);
+
+}
+
+
+
+<div id="index_wrapper">
+
+    <h2>Табеля выходов за @mod.Year год</h2>
+    @{
+        <div class="block_main"><a href="/Home/Index/@mod.AddMonths(-1).Year/DateTime.Now.AddMonths(-1).Month">&uarr;</a></div>
+        <div class="block_main"><a href="/Home/Month/@mod.AddMonths(-1).Year/@mod.AddMonths(-1).Month">@name_prev_month</a></div>
+        <div class="block_main"><a href="/Home/Month/@mod.Year/@mod.Month">@name_month</a></div>
+        <div class="block_main"><a href="/Home/Month/@mod.AddMonths(1).Year/@mod.AddMonths(1).Month">@name_next_month</a></div>
+        <div class="block_main"><a href="/Home/Index/@mod.AddMonths(1).Year/@mod.AddMonths(1).Month">&darr;</a></div>
+    }   
+</div>
+

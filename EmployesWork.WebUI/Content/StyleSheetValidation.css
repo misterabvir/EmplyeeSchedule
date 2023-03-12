@@ -1,0 +1,85 @@
+﻿/* styles for validation helpers */
+
+ 
+.field-validation-valid {
+    display: none;
+}
+ 
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+ 
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+ 
+.validation-summary-errors {
+    color: #9d0c0c;
+    font-size:10px;
+    margin-bottom:-30px;
+}
+.validation-summary-errors ul {
+    list-style:none;
+}
+
+ 
+.validation-summary-valid {
+    display: none;
+}
+
+.wrap_password_container {
+    width:400px;
+    margin:0 auto;
+    border:1px solid transparent;
+    border-radius:2px;
+     background:#f9f9f9;
+     box-shadow: 0 0 3px  black;
+}
+
+.editor-label {
+    
+    width:100px;
+    margin:40px 50px 10px 50px ;
+    font:12px Verdana;
+    color:#666;
+}
+.editor-field input {
+    height:30px;
+    width:100%;
+    font-size:16px;
+    text-align:center;
+}
+.editor-field{
+   
+     margin:0 50px;
+     margin-top:-10px;
+     height:20px;
+
+}
+.field-validation-error {
+    display:block;
+    margin:-48px 0 0 150px;
+    color: #9d0c0c;
+
+    font-size:10px;
+}
+
+
+
+.wrap_password_container input[type=submit] {
+    width:75%;
+    height:40px;
+    text-align:center;
+    display:block;
+    padding:10px;
+    font-size:16px;
+    background-color:#9d0c0c;
+    border:none;
+    color:#f5f5f5;
+    cursor:pointer;
+    margin:30px 50px 10px 50px;
+    
+}
+
+
+

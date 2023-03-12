@@ -1,0 +1,61 @@
+﻿@model EmployesWork.WebUI2.Employes
+
+
+
+
+
+<div id="detwrap">
+
+    <dl class="dl-horizontal">
+        <dt>
+            Табельный номер
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PersonnelId)
+        </dd>
+
+        <dt>
+            ФИО
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            Должность
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            Инженер?
+        </dt>
+
+        <dd>
+            @(Model.ING.GetValueOrDefault() ? "Да" : "Нет")
+        </dd>
+
+        <dt>
+            Отображать в табеле?
+        </dt>
+
+        <dd>
+            @(Model.Show.GetValueOrDefault() ? "Да" : "Нет")
+        </dd>
+
+        <dt>
+            График
+        </dt>
+
+        <dd>
+            @(Model.Shedules.Brig + " Гр." + Model.Shedules.Sheduler)
+        </dd>
+
+    </dl>
+    <div><a href="javascript:close()"><input type="button" value="Закрыть" /></a></div>
+</div>
+

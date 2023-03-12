@@ -1,0 +1,55 @@
+﻿@using EmployesWork.WebUI2.Areas.Admin.Models
+@{
+    DateTime date = ViewBag.Date != null ? ViewBag.Date : DateTime.Now;
+    Employes employe = ViewBag.Employe;
+    WorkDays[] workday = ViewBag.WorkDays;
+
+    DateTime dt = new DateTime(date.Year, date.Month, 1);
+    DateTime dtp = dt.AddMonths(-1);
+    var daydtp = DateTime.DaysInMonth(dtp.Year, dtp.Month);
+    var dayInMonth = DateTime.DaysInMonth(date.Year, date.Month);
+    var firstDay = (int)dt.DayOfWeek;
+
+}
+
+<table id="tableCalendar">
+    <caption>@(new HelpClass().NameOfMonth(date.Month)), @date.Year</caption>
+    <tr>
+
+        <td>Пн.</td>
+        <td>Вт.</td>
+        <td>Ср.</td>
+        <td>Чт.</td>
+        <td>Пт.</td>
+        <td>Сб.</td>
+        <td>Вс.</td>
+    </tr>
+    @{
+        int dayc = 2 - firstDay;
+    }
+    @for (int j = 1; j <= dayInMonth / 7 + 1; j++)
+    {
+        <tr>
+
+            @for (int i = 0; i < 7; i++)
+            {
+                var lit = workday.Where(w => w.Date.Year == date.Year && w.Date.Month == date.Month && w.Date.Day == dayc).Select(s => s.Literal).FirstOrDefault();
+                if (dayc > dayInMonth || dayc <= 0)
+                {
+                    <td></td>
+
+
+                }
+                else {
+                    <td><p data-exx="@(new HelpClass().GetExit(lit))" onclick="setDate('@(new DateTime(date.Year, date.Month, dayc).ToShortDateString())')"><sup>@dayc</sup>@lit</p></td>
+                }
+                dayc++;
+            }
+
+        </tr>
+    }
+
+
+
+</table>
+

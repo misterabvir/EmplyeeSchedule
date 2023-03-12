@@ -1,0 +1,179 @@
+﻿@model IEnumerable<EmployesWork.WebUI2.WorkDays>
+@{
+    ViewBag.Title = "Табель выходов";
+    Employes[] Employes = ViewBag.Employes;
+    var daysInMMonth = DateTime.DaysInMonth(ViewBag.Date.Year, ViewBag.Date.Month);
+    var noexistsLit = Model.Where(x => x.ShedulesId == 6).Select(x => x.Literal).Distinct().ToArray();
+
+}
+
+
+  <tr>
+        <th class="abs1 absth2" >Таб.№</th>
+        <th class="abs absth" >ФИО</th>
+        @for (int i = 1; i <= daysInMMonth; i++)
+        {
+            var date = new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i);
+            <th><a href="javascript:dayConcrete('@date.ToString()')">@i</a></th>
+        }
+        <th>
+            <table cellpadding="0" cellspacing="0" class="innerTable innerTableHeader">
+                <tr>
+                    <th rowspan="2">График</th>
+                    <th rowspan="2">Выход</th>
+                    <th colspan="4">Часы</th>
+                </tr>
+                <tr>
+                    <th>Дн.</th>
+                    <th>Веч.</th>
+                    <th>Ноч.</th>
+                    <th>Всего</th>
+                </tr>
+            </table>
+        </th>
+        <th>Всего<br/>выходов</th>
+        <th>Всего<br />часов</th>
+        @for (int i = 0; i < noexistsLit.Count(); i++)
+        {
+            <th>@noexistsLit[i]</th>
+        }
+    </tr>
+    @foreach (var item in Employes)
+    {
+        if (!item.Show.GetValueOrDefault()) { continue; }
+
+        <tr class="empltr">
+            <td class="abs1">
+                <div><span> @Html.DisplayFor(modelItem => item.PersonnelId)</span></div>
+            </td>
+            <td class="abs @(item.ING.GetValueOrDefault()?"ing":"")" >
+                <a href="javascript:monthesExist('@item.Id')"><span>@Html.DisplayFor(modelItem => item.Name)</span></a>
+            </td>
+            @for (int i = 1; i <= daysInMMonth; i++)
+            {
+                var days = Model.Where(w=>w.EmployeId == item.Id).Where(s => s.Date == new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i)).OrderBy(s => s.Date);
+
+                if (days.Count() == 0)
+                {
+                    <td class="littd"><a height="100%" data-sheduleid="@item.ShedulesId"  href="javascript:getData('@(item.Id)', '@(new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i).ToShortDateString())')"></a> <div class="hint">@(new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i).ToShortDateString())</div> </td>
+                }
+                else {
+                    foreach (var day in days)
+                    {
+                        <td class="littd">
+                            <a height="100%" data-sheduleid="@day.ShedulesId" href="javascript:getData('@(item.Id)', '@(new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i).ToShortDateString())')">@Html.DisplayFor(modelItem => day.Literal)</a>
+                            <div class="hint">@(new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i).ToShortDateString())</div>
+                        </td>
+                    }
+                }
+            }
+            <td class="tdrev">
+                <table class="innerTable" width="100%">
+                    @{var itemdays = Model.Where(w => w.EmployeId == item.Id).Where(s => s.Date.Month == ViewBag.Date.Month && s.Date.Year == ViewBag.Date.Year && s.ShedulesId != 6);
+                        var allhour = 0d;
+                        var allExist = 0d;
+                    }
+                    @foreach (var exist in itemdays.Select(d => d.Shedules).Distinct())
+                    {
+                        <tr>
+                            <td>
+                                @(exist.Brig + " " + exist.Sheduler)
+                                <div class="hint2"> @(item.Name)<br />График: @(exist.Brig + " " + exist.Sheduler)</div>
+                        </td>
+                            @{
+                                var employerexists = itemdays.Where(s => s.ShedulesId == exist.Id).Count();
+                                allExist += employerexists;
+                            }
+                            <td>
+                                @employerexists
+                                <div class="hint2"> @(item.Name)<br />График: @(exist.Brig + " " + exist.Sheduler)<br/> Выходов: @employerexists</div>
+                        </td>
+                            @{
+                                var dhour = itemdays.Where(s => s.ShedulesId == exist.Id).Select((s) =>
+                                {
+                                    double hour;
+                                    if (double.TryParse(s.Literal, out hour) || double.TryParse(s.Literal.Replace(".", ","), out hour) || double.TryParse(s.Literal.Replace(",", "."), out hour)) return hour;
+                                    else if (s.Literal == "Д") return 11;
+                                    else if (s.Literal == "Н") return 1;
+                                    else return 0;
+                                }).Sum();
+
+                            }
+                            <td>
+                                @dhour
+                                <div class="hint2"> @(item.Name)<br />График: @(exist.Brig + " " + exist.Sheduler)<br />Дневные: @dhour</div>
+                        </td>
+                            @{
+                                var ehour = itemdays.Where(s => s.ShedulesId == exist.Id).Select((s) =>
+                                {
+                                    if (s.Literal == "Н") return 5;
+                                    else return 0;
+                                }).Sum();
+
+                            }
+                            <td>
+                                @ehour
+                                <div class="hint2"> @(item.Name)<br />График: @(exist.Brig + " " + exist.Sheduler)<br />Вечерние: @ehour</div>
+                        </td>
+                            @{
+                                var nhour = itemdays.Where(s => s.ShedulesId == exist.Id).Select((s) =>
+                                {
+                                    if (s.Literal == "Н") return 7;
+                                    else return 0;
+                                }).Sum();
+
+                            }
+                            <td>
+                                @nhour
+                                <div class="hint2"> @(item.Name)<br />График: @(exist.Brig + " " + exist.Sheduler)<br />Ночные: @nhour</div>
+                        </td>
+
+                            @{
+                                var employesHours = nhour + ehour + dhour;
+                                allhour += employesHours;
+                            }
+                            <td>
+                                @employesHours
+                            <div class="hint2"> @(item.Name)<br />График: @(exist.Brig + " " + exist.Sheduler)<br />Часов: @employesHours</div>
+                        </td>
+                        </tr>
+                                }
+                </table>
+               
+            </td>
+            <td class="noexist">
+                @allExist
+                <div class="hint"> @(item.Name)<br />Выходов за месяц: @allExist</div>
+        </td>
+            <td class="noexist">
+                @allhour
+                <div class="hint"> @(item.Name)<br />Часов за месяц: @allhour</div>
+            </td>
+            @{
+                for (int i = 0; i < noexistsLit.Count(); i++)
+                {
+                    <td class="noexist">@(Model.Where(w => w.EmployeId == item.Id).Where(w => w.Literal == noexistsLit[i]).Count())</td>
+                }
+            }
+        </tr>
+     }
+    <tr class="itogs">
+        <td colspan="2" class="abs2">Отработало за сутки:</td>
+        @for (int i = 1; i <= daysInMMonth; i++)
+        {
+            var exdays = Model.Where(s => s.Date == new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i) && s.ShedulesId != 6 && s.ShedulesId != 13).Count();
+            <td>@exdays<div class="hint">@(new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i).ToShortDateString())</div></td>
+        }
+    </tr>
+    <tr class="itogs">
+        <td colspan="2"  class="abs2">Неявилось за сутки:</td>
+        @for (int i = 1; i <= daysInMMonth; i++)
+        {
+            var exdays = Model.Where(s => s.Date == new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i) && s.ShedulesId == 6 && s.ShedulesId != 13).Count();
+            <td>
+                @exdays
+            <div class="hint">@(new DateTime(ViewBag.Date.Year, ViewBag.Date.Month, i).ToShortDateString())</div>
+        </td>
+        }
+    </tr>
+

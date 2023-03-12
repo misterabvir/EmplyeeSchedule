@@ -1,0 +1,62 @@
+﻿h1 {
+    background-color:#f5f5f5;
+    color:#966;
+    text-align:center;
+    width:600px;
+    margin:0 auto;
+    height:40px;
+    padding-top:15px;
+    font-family: Arial, Verdana;
+    box-shadow:0 5px 2px #999;
+}
+header {
+    width:600px;
+    margin:0 auto;
+   box-shadow:0 5px 2px #999;
+    text-align:center;
+    background-color:#f5f5f5;
+}
+    header a {
+        text-decoration:none;
+    }
+.wheel {
+    z-index: 100;
+ 
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 5000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 5000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease-in-out;
+    -ms-animation-name: spin;
+    -ms-animation-duration: 5000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: ease-in-out;
+ 
+    animation-name: spin;
+    animation-duration: 5000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+@-ms-keyframes spin {
+    from { -ms-transform: rotate3D(0,1,0, 0deg); }
+    to { -ms-transform: rotate3D(0,1,0, 180deg);  }
+}
+@-moz-keyframes spin {
+    from { -moz-transform: rotate3D(0,1,0, 0deg); }
+    to { -moz-transform: rotate3D(0,1,0, 180deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate3D(0,1,0, 0deg);}
+    to { -webkit-transform: rotate3D(0,1,0, 180deg); }
+}
+@keyframes spin {
+    from {
+        transform:rotate3D(0,1,0, 0deg);
+    }
+    to {
+        transform:rotate3D(0,1,0, 180deg);
+    }
+}

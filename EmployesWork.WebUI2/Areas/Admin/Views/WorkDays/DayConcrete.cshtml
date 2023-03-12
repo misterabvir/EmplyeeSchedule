@@ -1,0 +1,66 @@
+﻿
+@{
+    IEnumerable<Employes> employes = ViewBag.Employes;
+    IEnumerable<WorkDays> wdays = ViewBag.WorkDays;
+    IEnumerable<Shedules> sheds = ViewBag.Shedules;
+
+    var options = new AjaxOptions()
+    {
+        UpdateTargetId = "dayyy",
+        Url = Url.Action("DayConcreteResult"),
+        LoadingElementId = "loadingIndicator",
+    };
+    
+}
+
+
+
+<div id="wrapdayconcrete">
+    <h2>@ViewBag.Title @ViewBag.Date.ToShortDateString()</h2>
+    @using (Ajax.BeginForm(options))
+    {
+        var i = 0;
+        foreach (var item in employes)
+        {
+            <div class="dayformconcrete">
+                @{
+                    var wd = wdays.Where(w => w.EmployeId == item.Id).FirstOrDefault();
+                    if (wd == null)
+                    {
+                        wd = new WorkDays()
+                        {
+                            DayId = 0,
+                            EmployeId = item.Id,
+                            ShedulesId = item.ShedulesId.GetValueOrDefault(),
+                            Date = ViewBag.Date
+                        };
+                    }
+
+
+                    <span>@item.Name</span>
+
+                    <input type="hidden" name="days[@i].EmployeId" value="@item.Id" />
+                    <input type="hidden" name="days[@i].DayId" value="@wd.DayId" />
+                    <input type="hidden" name="days[@i].Date" value="@ViewBag.Date" />
+
+                    <input type="text" name="days[@i].Literal" id="lit" value="@wd.Literal" />
+
+
+                    var sel = wd.DayId == 0 ? item.ShedulesId : wd.ShedulesId == 6 ? item.ShedulesId : wd.ShedulesId;
+
+                    <select name="days[@i].ShedulesId">
+                        @foreach (var sh in sheds)
+                        {
+                            <option value="@sh.Id" @(sel == sh.Id ? "selected='selected'" : "")> @sh.Brig @sh.Sheduler</option>
+                        }
+                    </select>
+                }
+            </div>
+                        i++;
+                    }
+        <div id="buttons2" onclick="javascript: closeDiv2()">
+            <input id="send1" type="submit" value="OK" />
+            <input type="button" value="Cancel" />
+        </div>
+                    }
+</div>
